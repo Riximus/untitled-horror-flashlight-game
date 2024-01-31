@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dlii65ro1qm6n"]
+[gd_scene load_steps=10 format=3 uid="uid://dlii65ro1qm6n"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_prvn4"]
 [ext_resource type="Texture2D" uid="uid://bpiihio7er0e" path="res://assets/texture_07.png" id="1_xpvwb"]
+[ext_resource type="PackedScene" uid="uid://bdxhgs0r6ynvi" path="res://scenes/item.tscn" id="3_tnibf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vvx3h"]
 albedo_texture = ExtResource("1_xpvwb")
@@ -22,6 +23,8 @@ glow_enabled = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_55fa2"]
 
+[sub_resource type="CanvasTexture" id="CanvasTexture_4q6po"]
+
 [node name="World" type="Node3D"]
 
 [node name="Stage" type="Node3D" parent="."]
@@ -36,6 +39,7 @@ material = SubResource("StandardMaterial3D_vvx3h")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+visible = false
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
@@ -52,3 +56,16 @@ shape = SubResource("CapsuleShape3D_55fa2")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
+
+[node name="Pivot" type="TextureRect" parent="Player/Head/Camera3D"]
+offset_left = 570.0
+offset_top = 318.0
+offset_right = 582.0
+offset_bottom = 330.0
+texture = SubResource("CanvasTexture_4q6po")
+
+[node name="PickupPos" type="Node3D" parent="Player/Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44219, -0.304988, -0.97842)
+
+[node name="Item" parent="." instance=ExtResource("3_tnibf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.95181, 0.657881, 0)
