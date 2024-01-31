@@ -51,8 +51,8 @@ func _input(event: InputEvent) -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	if event.is_action_pressed("pickup") and not cur_item:
-		var space_state = get_world_3d().direct_space_state
-		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(
+		var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+		var result: Dictionary = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(
 			cam.global_position, cam.global_position-cam.global_transform.basis.z.normalized()*PICKUP_LENGTH))
 
 		if result and result.collider.is_in_group("Item"):
