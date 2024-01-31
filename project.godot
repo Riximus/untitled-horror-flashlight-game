@@ -11,5 +11,5 @@ config_version=5
 [application]
 
 config/name="untitled-horror-flashlight-game"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
