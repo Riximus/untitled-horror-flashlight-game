@@ -4,12 +4,16 @@ extends CharacterBody3D
 @onready var standing_collision_shape: CollisionShape3D = $StandingCollisionShape
 @onready var crouching_collision_shape: CollisionShape3D = $CrouchingCollisionShape
 @onready var raycast: RayCast3D = $RayCast3D
+@onready var cam: Camera3D = $Head/Camera3D
+@onready var pickup_pos: Node3D = $Head/Camera3D/PickupPos
 
 # Movement constants
 const WALKING_SPEED: float   = 5.0
 const SPRINTING_SPEED: float = 8.0
 const CROUCHING_SPEED: float = 3.0
 const JUMP_VELOCITY: float = 4.5
+# pickup and drop
+const PICKUP_LENGTH: float = 2
 
 # Player constants
 const player_height: float = 1.8
@@ -23,22 +27,46 @@ var crouching_depth: float = -0.5
 var direction: Vector3 = Vector3.ZERO
 var mouse_sensitivity: float = 0.4 # TODO: make this a setting so players can change it.
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+
+var cur_item: Item = null
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _input(event: InputEvent) -> void:
-	# Mouse looking logic
-	if event is InputEventMouseMotion:
+    # Mouse looking logic
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_motion := event as InputEventMouseMotion
 		rotate_y(deg_to_rad(-mouse_motion.relative.x * mouse_sensitivity))
 		head.rotate_x(deg_to_rad(-mouse_motion.relative.y * mouse_sensitivity))
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-85), deg_to_rad(85))
 
-func _physics_process(delta: float) -> void:
+	if event.is_action_pressed("primary_action"):
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
+	if event.is_action_pressed("ui_cancel"):
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	if event.is_action_pressed("pickup") and not cur_item:
+		var space_state = get_world_3d().direct_space_state
+		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(
+			cam.global_position, cam.global_position-cam.global_transform.basis.z.normalized()*PICKUP_LENGTH))
+
+		if result and result.collider.is_in_group("Item"):
+			cur_item = result.collider
+			cur_item.freeze = true
+			cur_item.get_node("CollisionShape3D").disabled = true
+			cur_item.reparent(pickup_pos)
+	if event.is_action_pressed("drop") and cur_item:
+		cur_item.get_node("CollisionShape3D").disabled = false
+		cur_item.reparent(get_parent())
+		cur_item.freeze = false
+		cur_item = null
+
+func _physics_process(delta: float) -> void:
 	# Handle movement states
 	# Crouching
 	if Input.is_action_pressed("crouch") and is_on_floor(): # Crouch is dominant over sprinting.
@@ -57,6 +85,10 @@ func _physics_process(delta: float) -> void:
 		# Walking
 		else:
 			current_speed = WALKING_SPEED
+
+	if cur_item:
+		cur_item.global_position = lerp(cur_item.global_position, pickup_pos.global_position, delta*lerp_speed)
+		cur_item.global_rotation = lerp(cur_item.global_rotation, pickup_pos.global_rotation, delta*lerp_speed)
 
 	# Add the gravity.
 	if not is_on_floor():

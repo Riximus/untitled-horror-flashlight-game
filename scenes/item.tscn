@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdxhgs0r6ynvi"]
+
+[ext_resource type="Script" path="res://scenes/item.gd" id="1_rjmxl"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6eanj"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_w1pjb"]
+height = 0.408945
+radius = 0.0867457
+
+[node name="Item" type="RigidBody3D" groups=["Item"]]
+script = ExtResource("1_rjmxl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.173367, 0, 0, 0, 0.201028, 0, 0, 0, 0.174892, 0, 0, 0)
+mesh = SubResource("CylinderMesh_6eanj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_w1pjb")
