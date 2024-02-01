@@ -1,14 +1,18 @@
 extends CharacterBody3D
 
 @onready var head: Node3D = $Head
+@onready var eyes: Node3D = $Head/Eyes
+@onready var hand: Node3D = $Hand
+
 @onready var standing_collision_shape: CollisionShape3D = $StandingCollisionShape
 @onready var crouching_collision_shape: CollisionShape3D = $CrouchingCollisionShape
 @onready var above_head_raycast: RayCast3D = $AboveHeadRayCast
-@onready var eyes: Node3D = $Head/Eyes
+
 @onready var camera: Camera3D = $Head/Eyes/Camera3D
+
 @onready var pickup_pos: Node3D = $Head/Eyes/Camera3D/PickupPos
-@onready var hand: Node3D = $Hand
 @onready var flashlight: SpotLight3D = $Hand/SpotLight3D
+@onready var animation_player: AnimationPlayer = $Head/Eyes/AnimationPlayer
 
 # Movement constants
 const WALKING_SPEED: float   = 5.0
@@ -26,6 +30,7 @@ var current_speed: float = 5.0
 var lerp_speed: float = 10.0
 var air_lerp_speed: float = 1.5
 var crouching_depth: float = -0.5
+var last_velocity: Vector3 = Vector3.ZERO
 
 # Head bobbing variables
 var head_bobbing_speed: float = 0.0
@@ -162,9 +167,14 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not Input.is_action_pressed("crouch"):
 		current_player_state = PLAYER_STATE.JUMPING
 		velocity.y = JUMP_VELOCITY
+		animation_player.play("jump")
 
 	# Get the input direction and handle the movement/deceleration.
 	if is_on_floor():
+		# Handle landing
+		if last_velocity.y < 0.0:
+			animation_player.play("landing")
+		
 		direction = lerp(direction, (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(), delta*lerp_speed)
 	else:
 		if input_dir != Vector2.ZERO:
@@ -177,4 +187,5 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, current_speed)
 		velocity.z = move_toward(velocity.z, 0, current_speed)
 
+	last_velocity = velocity
 	move_and_slide()
