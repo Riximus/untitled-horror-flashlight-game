@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 @onready var head: Node3D = $Head
 @onready var eyes: Node3D = $Head/Eyes
-@onready var hand: Node3D = $Hand
+# @onready var hand: Node3D = $Hand
 
 @onready var standing_collision_shape: CollisionShape3D = $StandingCollisionShape
 @onready var crouching_collision_shape: CollisionShape3D = $CrouchingCollisionShape
@@ -11,7 +11,7 @@ extends CharacterBody3D
 @onready var camera: Camera3D = $Head/Eyes/Camera3D
 
 @onready var pickup_pos: Node3D = $Head/Eyes/Camera3D/PickupPos
-@onready var flashlight: SpotLight3D = $Hand/SpotLight3D
+# @onready var flashlight: SpotLight3D = $Hand/SpotLight3D
 @onready var animation_player: AnimationPlayer = $Head/Eyes/AnimationPlayer
 
 # Movement constants
