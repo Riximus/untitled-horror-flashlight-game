@@ -19,7 +19,6 @@ sky_material = SubResource("ProceduralSkyMaterial_50wf2")
 background_mode = 2
 sky = SubResource("Sky_bh5eu")
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_55fa2"]
 
@@ -44,11 +43,16 @@ use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_vvx3h")
 
+[node name="CSGBox3D3" type="CSGBox3D" parent="Stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.0621147, 7.11557, -10.0817)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_vvx3h")
+
 [node name="Environment" type="Node3D" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
-visible = false
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
@@ -83,7 +87,16 @@ texture = SubResource("CanvasTexture_4q6po")
 [node name="PickupPos" type="Node3D" parent="Player/Head/Eyes/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44219, -0.304988, -0.97842)
 
-[node name="RayCast3D" type="RayCast3D" parent="Player"]
+[node name="Hand" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.2, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Player/Hand"]
+spot_range = 11.0
+spot_attenuation = 0.750241
+spot_angle = 15.0
+spot_angle_attenuation = 0.7
+
+[node name="AboveHeadRayCast" type="RayCast3D" parent="Player"]
 target_position = Vector3(0, 2, 0)
 
 [node name="Item" parent="." instance=ExtResource("3_tnibf")]
