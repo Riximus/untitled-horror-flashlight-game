@@ -1,0 +1,160 @@
+[gd_scene load_steps=11 format=3 uid="uid://c16nt5tss8gca"]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_5e2pe"]
+[ext_resource type="Script" path="res://scripts/player/hand.gd" id="2_p83w1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_55fa2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7mp1q"]
+height = 1.2
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_4q6po"]
+
+[sub_resource type="Animation" id="Animation_hvypi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_s70mr"]
+resource_name = "jump"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.0349066, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1v6bf"]
+resource_name = "landing"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.0349066, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jslnd"]
+_data = {
+"RESET": SubResource("Animation_hvypi"),
+"jump": SubResource("Animation_s70mr"),
+"landing": SubResource("Animation_1v6bf")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_t6hew"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_5e2pe")
+
+[node name="StandingCollisionShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_55fa2")
+
+[node name="CrouchingCollisionShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608649, 0)
+shape = SubResource("CapsuleShape3D_7mp1q")
+disabled = true
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Eyes" type="Node3D" parent="Head"]
+
+[node name="Camera3D" type="Camera3D" parent="Head/Eyes"]
+
+[node name="Pivot" type="TextureRect" parent="Head/Eyes/Camera3D"]
+offset_left = 570.0
+offset_top = 318.0
+offset_right = 582.0
+offset_bottom = 330.0
+texture = SubResource("CanvasTexture_4q6po")
+
+[node name="PickupPos" type="Node3D" parent="Head/Eyes/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44219, -0.304988, -0.97842)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Head/Eyes"]
+libraries = {
+"": SubResource("AnimationLibrary_jslnd")
+}
+
+[node name="Hand" type="Node3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+script = ExtResource("2_p83w1")
+sway_threshold = 10.0
+sway_left = Vector3(0, 0.4, 0)
+sway_right = Vector3(0, -0.4, 0)
+
+[node name="PlaceholderItem" type="MeshInstance3D" parent="Head/Hand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.3, -0.3)
+mesh = SubResource("BoxMesh_t6hew")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Head/Hand/PlaceholderItem"]
+light_color = Color(0.85098, 1, 1, 1)
+light_energy = 3.0
+spot_range = 15.0
+spot_attenuation = 0.750241
+spot_angle = 20.0
+spot_angle_attenuation = 0.7
+
+[node name="AboveHeadRayCast" type="RayCast3D" parent="."]
+target_position = Vector3(0, 2, 0)
