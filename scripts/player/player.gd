@@ -3,7 +3,6 @@ extends CharacterBody3D
 @onready var head: Node3D = $Head
 @onready var eyes: Node3D = $Head/Eyes
 # @onready var hand: Node3D = $Hand
-
 @onready var standing_collision_shape: CollisionShape3D = $StandingCollisionShape
 @onready var crouching_collision_shape: CollisionShape3D = $CrouchingCollisionShape
 @onready var item_raycast: RayCast3D = $Head/Eyes/Camera3D/RayCast3D
@@ -91,7 +90,7 @@ func _input(event: InputEvent) -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		
 		if cur_item:
-			cur_item.item_actions[cur_item.item].call()
+			cur_item.item_resource.item_action.call()
 
 	if event.is_action_pressed("exit"):
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -110,7 +109,7 @@ func _input(event: InputEvent) -> void:
 		cur_item.get_node("CollisionShape3D").disabled = false
 		cur_item.freeze = false
 		cur_item.reparent(get_parent())
-		cur_item.apply_central_impulse(DROP_FORCE*-cam.global_transform.basis.z.normalized())
+		cur_item.apply_central_impulse(DROP_FORCE*-camera.global_transform.basis.z.normalized())
 		cur_item = null
 
 func _physics_process(delta: float) -> void:

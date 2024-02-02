@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ItemResource" load_steps=2 format=3 uid="uid://bs4xxjcnln8cn"]
+
+[ext_resource type="Script" path="res://scripts/item/item_resource.gd" id="1_6kwra"]
+
+[resource]
+script = ExtResource("1_6kwra")
+item_name = "Flashlight"
