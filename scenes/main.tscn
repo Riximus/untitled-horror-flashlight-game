@@ -189,6 +189,7 @@ libraries = {
 [node name="Hand" type="Node3D" parent="Player/Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
 script = ExtResource("3_1t2qn")
+sway_threshold = 10.0
 sway_left = Vector3(0, 0.4, 0)
 sway_right = Vector3(0, -0.4, 0)
 
