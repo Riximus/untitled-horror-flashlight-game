@@ -31,3 +31,5 @@ mono_crash.*.json
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+scripts/saveLoadSystem/envSecrets.gd
