@@ -10,7 +10,7 @@ const SAVE_GROUP_NAME: String = "Persist"
 static func delete_save() -> void:
 	if not ENABLED:
 		return
-		
+
 	if FileAccess.file_exists(SAVE_GAME_PATH):
 		DirAccess.remove_absolute(SAVE_GAME_PATH)
 	else:
@@ -18,15 +18,18 @@ static func delete_save() -> void:
 
 # Checks if a save file exists.
 static func has_save() -> bool:
+	print("FileAccess.file_exists(SAVE_GAME_PATH) ", FileAccess.file_exists(SAVE_GAME_PATH))
 	return FileAccess.file_exists(SAVE_GAME_PATH)
 
 	# Saves the game state to a binary file.
 func save_game(tree: SceneTree) -> void:
+	print("----- SAVING GAME -----")
 	print("Encryption Key ", ENCRYPTION_KEY)
 	if not ENABLED:
 		return
 
 	var file
+	print("OS.is_debug_build() ", OS.is_debug_build())
 	if OS.is_debug_build():
 		file = FileAccess.open(SAVE_GAME_PATH, FileAccess.WRITE)
 	else:
@@ -49,10 +52,12 @@ func save_game(tree: SceneTree) -> void:
 
 # Loads the game state from a binary file.
 func load_game(tree: SceneTree) -> void:
+	print("------- LOADING GAME -------")
+	print("has_save() ", has_save())
 	if not ENABLED or not has_save():
 		return
 
-	var file
+	var file = null
 	if OS.is_debug_build():
 		file = FileAccess.open(SAVE_GAME_PATH, FileAccess.READ)
 	else:
@@ -66,19 +71,14 @@ func load_game(tree: SceneTree) -> void:
 	var nodes_by_path: Dictionary  = {}
 
 	for node in save_nodes:
-		var node_path = node.get_path()
-		nodes_by_path[node_path] = node
+		if not node.get_path().is_empty():
+			nodes_by_path[node.get_path()] = node
 
-	while not file.eof_reached():
-		var path = file.get_pascal_string()
-		if nodes_by_path.has(path):
-			var node = nodes_by_path[path]
+		while file.get_position() < file.get_length():
 			if node.has_method("deserialize"):
 				node.call("deserialize", file)
 			else:
 				printerr("Node does not have a deserialize method: ", node)
-		else:
-			printerr("Saved node not found in current scene tree: ", path)
 	file.close()
 	print("Game loaded successfully.")
 
