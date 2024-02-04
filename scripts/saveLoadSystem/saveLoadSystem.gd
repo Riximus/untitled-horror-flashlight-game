@@ -6,8 +6,17 @@ const ENCRYPTION_KEY: String  = EnvSecrets.SAVE_ENCRYPTION_KEY
 const SAVE_GAME_PATH: String  = "user://savegame.sav"
 const SAVE_GROUP_NAME: String = "Persist"
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("saving"):
+		print("Action Pressed Saving")
+		SaveLoadSystem.save_game(get_tree())
+		
+	if event.is_action_pressed("loading") and SaveLoadSystem.has_save():
+		print("Action Pressed Loading")
+		SaveLoadSystem.load_game(get_tree())
+
 # Deletes the current save file.
-static func delete_save() -> void:
+func delete_save() -> void:
 	if not ENABLED:
 		return
 
@@ -17,14 +26,13 @@ static func delete_save() -> void:
 		printerr("Failed to delete save file.")
 
 # Checks if a save file exists.
-static func has_save() -> bool:
-	print("FileAccess.file_exists(SAVE_GAME_PATH) ", FileAccess.file_exists(SAVE_GAME_PATH))
+func has_save() -> bool:
+	print("Does Save File exist? ", FileAccess.file_exists(SAVE_GAME_PATH))
 	return FileAccess.file_exists(SAVE_GAME_PATH)
 
 	# Saves the game state to a binary file.
 func save_game(tree: SceneTree) -> void:
-	print("----- SAVING GAME -----")
-	print("Encryption Key ", ENCRYPTION_KEY)
+	print("------- SAVING GAME -------")
 	if not ENABLED:
 		return
 
@@ -48,13 +56,12 @@ func save_game(tree: SceneTree) -> void:
 			printerr("Node does not have a serialize method: ", node)
 
 	file.close()
-	print("Game saved successfully.")
+	print("------- Game saved successfully -------")
 
 # Loads the game state from a binary file.
 func load_game(tree: SceneTree) -> void:
 	print("------- LOADING GAME -------")
-	print("has_save() ", has_save())
-	if not ENABLED or not has_save():
+	if not ENABLED:
 		return
 
 	var file = null
@@ -68,19 +75,17 @@ func load_game(tree: SceneTree) -> void:
 		return
 
 	var save_nodes: Array[Variant] = tree.get_nodes_in_group(SAVE_GROUP_NAME)
-	var nodes_by_path: Dictionary  = {}
+	var nodes_by_path: Dictionary = {}
 
 	for node in save_nodes:
-		if not node.get_path().is_empty():
-			nodes_by_path[node.get_path()] = node
+		nodes_by_path[node.get_path()] = node
+		if node.has_method("deserialize"):
+			node.call("deserialize", file)
+		else:
+			printerr("Node does not have a deserialize method: ", node)
 
-		while file.get_position() < file.get_length():
-			if node.has_method("deserialize"):
-				node.call("deserialize", file)
-			else:
-				printerr("Node does not have a deserialize method: ", node)
 	file.close()
-	print("Game loaded successfully.")
+	print("------- Game loaded successfully -------")
 
 	# Cleanup any nodes that were saved but are no longer present.
 	for path in nodes_by_path:

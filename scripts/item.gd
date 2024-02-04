@@ -4,7 +4,6 @@ class_name Item
 
 func serialize(file: FileAccess) -> void:
 	print('Item Serialize')
-	print(global_position)
 	file.store_float(global_position.x)
 	file.store_float(global_position.y)
 	file.store_float(global_position.z)

@@ -78,15 +78,6 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _input(event: InputEvent) -> void:
-
-	if event.is_action_pressed("saving"):
-		if SaveLoadSystem.has_save():
-			SaveLoadSystem.delete_save()
-		SaveLoadSystem.save_game(get_tree())
-		
-	if event.is_action_pressed("loading") and SaveLoadSystem.has_save():
-		SaveLoadSystem.load_game(get_tree())
-		
 	# Mouse looking logic
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_motion := event as InputEventMouseMotion
@@ -201,7 +192,6 @@ func _physics_process(delta: float) -> void:
 
 func serialize(file: FileAccess) -> void:
 	print('Player Serialize')
-	print(global_position)
 	file.store_float(global_position.x)
 	file.store_float(global_position.y)
 	file.store_float(global_position.z)
