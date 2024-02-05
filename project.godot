@@ -19,6 +19,10 @@ config/features=PackedStringArray("4.2", "GL Compatibility")
 SaveLoadSystem="*res://scripts/saveLoadSystem/saveLoadSystem.gd"
 EnvSecrets="*res://scripts/saveLoadSystem/envSecrets.gd"
 
+[display]
+
+window/size/always_on_top=true
+
 [file_customization]
 
 folder_colors={
