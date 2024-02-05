@@ -189,3 +189,15 @@ func _physics_process(delta: float) -> void:
 
 	last_velocity = velocity
 	move_and_slide()
+
+func serialize(file: FileAccess) -> void:
+	print('Player Serialize')
+	file.store_float(global_position.x)
+	file.store_float(global_position.y)
+	file.store_float(global_position.z)
+
+func deserialize(file: FileAccess) -> void:
+	print('Player Deserialize')
+	global_position.x = file.get_float()
+	global_position.y = file.get_float()
+	global_position.z = file.get_float()
