@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="ItemResource" load_steps=2 format=3 uid="uid://bs4xxjcnln8cn"]
+[gd_resource type="Resource" script_class="ItemResource" load_steps=3 format=3 uid="uid://bs4xxjcnln8cn"]
 
 [ext_resource type="Script" path="res://scripts/item/item_resource.gd" id="1_6kwra"]
+[ext_resource type="Texture2D" uid="uid://bpiihio7er0e" path="res://assets/texture_07.png" id="1_csdpn"]
 
 [resource]
 script = ExtResource("1_6kwra")
-item_name = "Flashlight"
+item_slot_image = ExtResource("1_csdpn")

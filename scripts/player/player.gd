@@ -1,17 +1,20 @@
 extends CharacterBody3D
 
+class_name Player
+
 @onready var head: Node3D = $Head
 @onready var eyes: Node3D = $Head/Eyes
 # @onready var hand: Node3D = $Hand
 @onready var standing_collision_shape: CollisionShape3D = $StandingCollisionShape
 @onready var crouching_collision_shape: CollisionShape3D = $CrouchingCollisionShape
 @onready var item_raycast: RayCast3D = $Head/Eyes/Camera3D/RayCast3D
-@onready var pivot: TextureRect = $Head/Eyes/Camera3D/Pivot
+@onready var pivot: TextureRect = $Head/Eyes/Camera3D/UIHolder/Pivot
 @onready var above_head_raycast: RayCast3D = $AboveHeadRayCast
 @onready var camera: Camera3D = $Head/Eyes/Camera3D
 @onready var pickup_pos: Node3D = $Head/Eyes/Camera3D/PickupPos
 # @onready var flashlight: SpotLight3D = $Hand/SpotLight3D
 @onready var animation_player: AnimationPlayer = $Head/Eyes/AnimationPlayer
+@onready var item_manager: ItemManager = $ItemManager
 
 # Movement constants
 const WALKING_SPEED: float   = 5.0
@@ -72,8 +75,6 @@ var mouse_sensitivity: float = 0.4 # TODO: make this a setting so players can ch
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-var cur_item: Item = null
-
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
@@ -89,28 +90,29 @@ func _input(event: InputEvent) -> void:
 		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		
-		if cur_item:
-			cur_item.item_resource.item_action.call()
+		if item_manager.cur_item:
+			item_manager.cur_item.item_resource.item_action.call()
 
 	if event.is_action_pressed("exit"):
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	if event.is_action_pressed("pickup") and not cur_item:
-		#var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
-		#var result: Dictionary = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(
-		#	cam.global_position, cam.global_position-cam.global_transform.basis.z.normalized()*PICKUP_LENGTH))
+	if event.is_action_pressed("pickup") and item_manager.item_count < item_manager.slot_count:
 		if item_raycast.is_colliding() and item_raycast.get_collider().is_in_group("Item"):
-			cur_item = item_raycast.get_collider()
-			cur_item.freeze = true
-			cur_item.get_node("CollisionShape3D").disabled = true
-			cur_item.reparent(pickup_pos)
-	if event.is_action_pressed("drop") and cur_item:
+			var new_item = item_raycast.get_collider()
+			new_item.freeze = true
+			new_item.get_node("CollisionShape3D").disabled = true
+			new_item.reparent(pickup_pos)
+			
+			item_manager.pickup_item(new_item)
+	if event.is_action_pressed("drop") and item_manager.cur_item:
+		var cur_item: Item = item_manager.cur_item
 		cur_item.get_node("CollisionShape3D").disabled = false
 		cur_item.freeze = false
 		cur_item.reparent(get_parent())
 		cur_item.apply_central_impulse(DROP_FORCE*-camera.global_transform.basis.z.normalized())
-		cur_item = null
+		
+		item_manager.drop_cur_item()
 
 func _physics_process(delta: float) -> void:
 	# Handle movement states
@@ -141,9 +143,11 @@ func _physics_process(delta: float) -> void:
 		elif input_dir == Vector2.ZERO and is_on_floor():
 			current_player_state = PLAYER_STATE.IDLE
 
-	if cur_item:
-		cur_item.global_position = lerp(cur_item.global_position, pickup_pos.global_position, delta*lerp_speed)
-		cur_item.global_rotation = lerp(cur_item.global_rotation, pickup_pos.global_rotation, delta*lerp_speed)
+	if item_manager.cur_item:
+		item_manager.cur_item.global_position = lerp(item_manager.cur_item.global_position, 
+		pickup_pos.global_position, delta*lerp_speed)
+		item_manager.cur_item.global_rotation = lerp(item_manager.cur_item.global_rotation, 
+		pickup_pos.global_rotation, delta*lerp_speed)
 
 		# Handle head bobbing
 	if is_on_floor() and not current_player_state == PLAYER_STATE.IDLE and input_dir != Vector2.ZERO:

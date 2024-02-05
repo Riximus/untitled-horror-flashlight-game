@@ -11,6 +11,7 @@
 height = 1.2
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_4q6po"]
+specular_color = Color(0.517647, 0.517647, 0.517647, 1)
 
 [sub_resource type="Animation" id="Animation_hvypi"]
 length = 0.001
@@ -124,19 +125,60 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head/Eyes"]
 
-[node name="Pivot" type="TextureRect" parent="Head/Eyes/Camera3D"]
-offset_left = 570.0
-offset_top = 318.0
-offset_right = 582.0
-offset_bottom = 330.0
-texture = SubResource("CanvasTexture_4q6po")
-
 [node name="PickupPos" type="Node3D" parent="Head/Eyes/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44219, -0.304988, -0.97842)
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Eyes/Camera3D"]
 target_position = Vector3(0, 0, -2)
 collision_mask = 2
+
+[node name="UIHolder" type="Node3D" parent="Head/Eyes/Camera3D"]
+
+[node name="Pivot" type="TextureRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 570.0
+offset_top = 318.0
+offset_right = 582.0
+offset_bottom = 330.0
+texture = SubResource("CanvasTexture_4q6po")
+
+[node name="Slot1" type="ColorRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 1054.0
+offset_top = 550.0
+offset_right = 1114.0
+offset_bottom = 610.0
+color = Color(0.615686, 0.615686, 0.615686, 0.498039)
+
+[node name="Slot2" type="ColorRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 984.0
+offset_top = 550.0
+offset_right = 1044.0
+offset_bottom = 610.0
+color = Color(0.615686, 0.615686, 0.615686, 0.498039)
+
+[node name="Slot3" type="ColorRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 914.0
+offset_top = 550.0
+offset_right = 974.0
+offset_bottom = 610.0
+color = Color(0.615686, 0.615686, 0.615686, 0.498039)
+
+[node name="SlotImage1" type="TextureRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 1054.0
+offset_top = 550.0
+offset_right = 1114.0
+offset_bottom = 610.0
+
+[node name="SlotImage2" type="TextureRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 984.0
+offset_top = 550.0
+offset_right = 1044.0
+offset_bottom = 610.0
+
+[node name="SlotImage3" type="TextureRect" parent="Head/Eyes/Camera3D/UIHolder"]
+offset_left = 914.0
+offset_top = 550.0
+offset_right = 974.0
+offset_bottom = 610.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Head/Eyes"]
 libraries = {
@@ -165,6 +207,8 @@ spot_angle_attenuation = 0.7
 [node name="AboveHeadRayCast" type="RayCast3D" parent="."]
 target_position = Vector3(0, 2, 0)
 
-[node name="ItemManager" type="Node3D" parent="."]
+[node name="ItemManager" type="Node3D" parent="." node_paths=PackedStringArray("image_slots", "ui_slots")]
 script = ExtResource("3_6v8x6")
+image_slots = [NodePath("../Head/Eyes/Camera3D/UIHolder/SlotImage1"), NodePath("../Head/Eyes/Camera3D/UIHolder/SlotImage2"), NodePath("../Head/Eyes/Camera3D/UIHolder/SlotImage3")]
+ui_slots = [NodePath("../Head/Eyes/Camera3D/UIHolder/Slot1"), NodePath("../Head/Eyes/Camera3D/UIHolder/Slot2"), NodePath("../Head/Eyes/Camera3D/UIHolder/Slot3")]
 item_resources = Array[Resource("res://scripts/item/item_resource.gd")]([ExtResource("4_m2xw2")])
