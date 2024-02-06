@@ -13,38 +13,36 @@ var cur_item: Item = null
 
 @onready var slot_count: int = image_slots.size()
 
-func change_image_from_slot(image: Texture):
+func update_slot_image(image: Texture):
 	image_slots[cur_items.size()-1].texture = image
 	image_slots[cur_items.size()-1].visible = true
 
-func erase_image_from_slot():
+func erase_slot_image():
 	image_slots[cur_items.size()-1].visible = false
 
 func change_cur_item(new_item: Item):
 	if cur_item:
 		cur_item.visible = false
 	cur_item = new_item
-	ui_slots[cur_item_idx].size += Vector2.ONE * 5
 	
 func pickup_item(item: Item):
 	change_cur_item(item)
 	cur_items.push_front(item)
 	image_slots[0]
 	item_count += 1
-	change_image_from_slot(item.item_resource.item_slot_image)
+	update_slot_image(item.item_resource.item_slot_image)
 	
 func drop_cur_item():
 	cur_items.erase(cur_item)
 	cur_item = null
 	item_count -= 1
-	erase_image_from_slot()
+	erase_slot_image()
 	
 func switch_cur_item():
-	if cur_items.size() > 0:
-		cur_item_idx = (cur_item_idx + 1) % cur_items.size()
-		change_cur_item(cur_items[cur_item_idx])
-		if cur_item:
-			cur_item.visible = true
+	cur_item_idx = (cur_item_idx + 1) % slot_count
+	change_cur_item(cur_items[cur_item_idx] if cur_item_idx < cur_items.size() else null)
+	if cur_item:
+		cur_item.visible = true
 
 func _input(event):
 	if event.is_action_pressed("ui_up"):
@@ -52,4 +50,4 @@ func _input(event):
 
 func _enter_tree():
 	item_resources[0].item_action = func():
-		$"../Head/Hand/PlaceholderItem/SpotLight3D".visible = not $"../Head/Hand/PlaceholderItem/SpotLight3D".visible
+		$"../Head/Hand/lightflash/SpotLight3D".visible = not $"../Head/Hand/lightflash/SpotLight3D".visible

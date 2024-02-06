@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_5e2pe"]
 [ext_resource type="Script" path="res://scripts/player/hand.gd" id="2_p83w1"]
 [ext_resource type="Script" path="res://scripts/item/item_manager.gd" id="3_6v8x6"]
+[ext_resource type="PackedScene" uid="uid://dofh1sa1qkop2" path="res://assets/lightflash.blend" id="3_hfxgh"]
 [ext_resource type="Resource" uid="uid://bs4xxjcnln8cn" path="res://resources/flashlight.tres" id="4_m2xw2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_55fa2"]
@@ -103,9 +104,6 @@ _data = {
 "landing": SubResource("Animation_1v6bf")
 }
 
-[sub_resource type="BoxMesh" id="BoxMesh_t6hew"]
-size = Vector3(0.1, 0.1, 0.5)
-
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_5e2pe")
 
@@ -192,11 +190,11 @@ sway_threshold = 10.0
 sway_left = Vector3(0, 0.4, 0)
 sway_right = Vector3(0, -0.4, 0)
 
-[node name="PlaceholderItem" type="MeshInstance3D" parent="Head/Hand"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.3, -0.3)
-mesh = SubResource("BoxMesh_t6hew")
+[node name="lightflash" parent="Head/Hand" instance=ExtResource("3_hfxgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.3, -0.1)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Head/Hand/PlaceholderItem"]
+[node name="SpotLight3D" type="SpotLight3D" parent="Head/Hand/lightflash"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.570195)
 light_color = Color(0.85098, 1, 1, 1)
 light_energy = 3.0
 spot_range = 15.0
