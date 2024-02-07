@@ -46,7 +46,6 @@ material = SubResource("StandardMaterial3D_vvx3h")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
-visible = false
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
@@ -54,5 +53,5 @@ environment = SubResource("Environment_6drha")
 
 [node name="Player" parent="." groups=["Persist"] instance=ExtResource("2_km0o4")]
 
-[node name="Item" parent="." groups=["Persist"] instance=ExtResource("3_tnibf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.70398, 0.352738, 0)
+[node name="Item" parent="." instance=ExtResource("3_tnibf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.70398, 0.657881, 0)
