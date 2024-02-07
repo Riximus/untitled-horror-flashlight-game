@@ -9,11 +9,11 @@ const SAVE_GROUP_NAME: String = "Persist"
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("saving"):
 		print("Action Pressed Saving")
-		SaveLoadSystem.save_game(get_tree())
+		SaveLoadGame.save_game(get_tree())
 		
-	if event.is_action_pressed("loading") and SaveLoadSystem.has_save():
+	if event.is_action_pressed("loading") and SaveLoadGame.has_save():
 		print("Action Pressed Loading")
-		SaveLoadSystem.load_game(get_tree())
+		SaveLoadGame.load_game(get_tree())
 
 # Deletes the current save file.
 func delete_save() -> void:

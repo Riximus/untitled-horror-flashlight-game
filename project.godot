@@ -16,8 +16,8 @@ config/features=PackedStringArray("4.2", "GL Compatibility")
 
 [autoload]
 
-SaveLoadSystem="*res://scripts/saveLoadSystem/saveLoadSystem.gd"
 EnvSecrets="*res://scripts/saveLoadSystem/envSecrets.gd"
+SaveLoadGame="*res://scripts/saveLoadSystem/saveLoadGame.gd"
 
 [display]
 
