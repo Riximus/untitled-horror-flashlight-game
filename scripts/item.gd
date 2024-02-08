@@ -2,6 +2,8 @@ extends RigidBody3D
 
 class_name Item
 
+@export var item_resource: ItemResource
+
 func serialize(file: FileAccess) -> void:
 	print('Item Serialize')
 	file.store_float(global_position.x)

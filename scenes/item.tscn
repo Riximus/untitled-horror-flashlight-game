@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdxhgs0r6ynvi"]
+[gd_scene load_steps=5 format=3 uid="uid://bdxhgs0r6ynvi"]
 
-[ext_resource type="Script" path="res://scripts/item.gd" id="1_rjmxl"]
+[ext_resource type="Script" path="res://scripts/item/item.gd" id="1_1jwai"]
+[ext_resource type="Resource" uid="uid://bs4xxjcnln8cn" path="res://resources/flashlight.tres" id="2_87s0i"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_6eanj"]
 
@@ -9,7 +10,9 @@ height = 0.408945
 radius = 0.0867457
 
 [node name="Item" type="RigidBody3D" groups=["Item"]]
-script = ExtResource("1_rjmxl")
+collision_layer = 2
+script = ExtResource("1_1jwai")
+item_resource = ExtResource("2_87s0i")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.173367, 0, 0, 0, 0.201028, 0, 0, 0, 0.174892, 0, 0, 0)

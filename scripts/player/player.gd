@@ -3,13 +3,12 @@ extends CharacterBody3D
 @onready var head: Node3D = $Head
 @onready var eyes: Node3D = $Head/Eyes
 # @onready var hand: Node3D = $Hand
-
 @onready var standing_collision_shape: CollisionShape3D = $StandingCollisionShape
 @onready var crouching_collision_shape: CollisionShape3D = $CrouchingCollisionShape
+@onready var item_raycast: RayCast3D = $Head/Eyes/Camera3D/RayCast3D
+@onready var pivot: TextureRect = $Head/Eyes/Camera3D/Pivot
 @onready var above_head_raycast: RayCast3D = $AboveHeadRayCast
-
 @onready var camera: Camera3D = $Head/Eyes/Camera3D
-
 @onready var pickup_pos: Node3D = $Head/Eyes/Camera3D/PickupPos
 # @onready var flashlight: SpotLight3D = $Hand/SpotLight3D
 @onready var animation_player: AnimationPlayer = $Head/Eyes/AnimationPlayer
@@ -20,7 +19,8 @@ const SPRINTING_SPEED: float = 8.0
 const CROUCHING_SPEED: float = 3.0
 const JUMP_VELOCITY: float = 4.5
 # pickup and drop
-const PICKUP_LENGTH: float = 2
+const PICKUP_LENGTH: float = 2.0
+const DROP_FORCE: float = 2.0
 
 # Player constants
 const player_height: float = 1.8
@@ -88,25 +88,28 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("primary_action"):
 		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		
+		if cur_item:
+			cur_item.item_resource.item_action.call()
 
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("exit"):
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	if event.is_action_pressed("pickup") and not cur_item:
-		var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
-		var result: Dictionary = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(
-			camera.global_position, camera.global_position-camera.global_transform.basis.z.normalized()*PICKUP_LENGTH))
-
-		if result and result.collider.is_in_group("Item"):
-			cur_item = result.collider
+		#var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+		#var result: Dictionary = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(
+		#	cam.global_position, cam.global_position-cam.global_transform.basis.z.normalized()*PICKUP_LENGTH))
+		if item_raycast.is_colliding() and item_raycast.get_collider().is_in_group("Item"):
+			cur_item = item_raycast.get_collider()
 			cur_item.freeze = true
 			cur_item.get_node("CollisionShape3D").disabled = true
 			cur_item.reparent(pickup_pos)
 	if event.is_action_pressed("drop") and cur_item:
 		cur_item.get_node("CollisionShape3D").disabled = false
-		cur_item.reparent(get_parent())
 		cur_item.freeze = false
+		cur_item.reparent(get_parent())
+		cur_item.apply_central_impulse(DROP_FORCE*-camera.global_transform.basis.z.normalized())
 		cur_item = null
 
 func _physics_process(delta: float) -> void:
@@ -114,11 +117,8 @@ func _physics_process(delta: float) -> void:
 	var input_dir := Input.get_vector("left", "right", "forward", "backward")
 
 	if is_on_floor():
-		# Idle
-		if input_dir == Vector2.ZERO and is_on_floor():
-			current_player_state = PLAYER_STATE.IDLE
 		# Crouching
-		elif Input.is_action_pressed("crouch") and is_on_floor(): # Crouch is dominant over sprinting.
+		if Input.is_action_pressed("crouch") and is_on_floor(): # Crouch is dominant over sprinting.
 			current_player_state = PLAYER_STATE.CROUCHING
 			current_speed = lerp(current_speed, CROUCHING_SPEED, delta*lerp_speed)
 			head.position.y = lerp(head.position.y, player_height + crouching_depth, delta*lerp_speed)
@@ -132,18 +132,21 @@ func _physics_process(delta: float) -> void:
 			# Sprinting
 			if Input.is_action_pressed("sprint"):
 				current_player_state = PLAYER_STATE.SPRINTING
-				current_speed = lerp(current_speed, SPRINTING_SPEED, delta*lerp_speed)
-				# Walking
+				current_speed = SPRINTING_SPEED
+			# Walking
 			else:
 				current_player_state = PLAYER_STATE.WALKING
-				current_speed = lerp(current_speed, WALKING_SPEED, delta*lerp_speed)
+				current_speed = WALKING_SPEED
+		# Idle
+		elif input_dir == Vector2.ZERO and is_on_floor():
+			current_player_state = PLAYER_STATE.IDLE
 
 	if cur_item:
 		cur_item.global_position = lerp(cur_item.global_position, pickup_pos.global_position, delta*lerp_speed)
 		cur_item.global_rotation = lerp(cur_item.global_rotation, pickup_pos.global_rotation, delta*lerp_speed)
 
-	# Handle head bobbing
-	if is_on_floor() and not current_player_state == PLAYER_STATE.IDLE:
+		# Handle head bobbing
+	if is_on_floor() and not current_player_state == PLAYER_STATE.IDLE and input_dir != Vector2.ZERO:
 		head_bobbing_speed = head_bobbing[current_player_state]["speed"]
 		head_bobbing_intensity = head_bobbing[current_player_state]["intensity"]
 		
@@ -189,6 +192,12 @@ func _physics_process(delta: float) -> void:
 
 	last_velocity = velocity
 	move_and_slide()
+	
+func _process(delta):
+	if item_raycast.is_colliding() and item_raycast.get_collider().is_in_group("Item"):
+		pivot.visible = true
+	else:
+		pivot.visible = false
 
 func serialize(file: FileAccess) -> void:
 	print('Player Serialize')
