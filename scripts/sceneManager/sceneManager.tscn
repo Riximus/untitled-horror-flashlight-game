@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1fcgnfg2ka4o"]
+
+[ext_resource type="Script" path="res://scripts/sceneManager/sceneManager.gd" id="1_1pyfv"]
+
+[node name="SceneManager" type="Node"]
+script = ExtResource("1_1pyfv")
+Scenes = {
+"Main": &"res://scenes/main.tscn",
+"MainMenu": &"res://scenes/ui/mainMenu.tscn"
+}

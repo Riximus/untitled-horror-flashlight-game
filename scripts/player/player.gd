@@ -192,6 +192,7 @@ func _physics_process(delta: float) -> void:
 
 func serialize(file: FileAccess) -> void:
 	print('Player Serialize')
+	#file.store_pascal_string()
 	file.store_float(global_position.x)
 	file.store_float(global_position.y)
 	file.store_float(global_position.z)

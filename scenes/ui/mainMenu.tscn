@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://h1uoclcymb8g"]
 
-[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_aosel"]
+[ext_resource type="Script" path="res://scripts/ui/mainMenu.gd" id="1_aosel"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -44,6 +44,7 @@ text = "Settings"
 layout_mode = 2
 text = "Quit"
 
+[connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/LoadGame" to="." method="_on_load_game_pressed"]
 [connection signal="pressed" from="PanelContainer/CenterContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]

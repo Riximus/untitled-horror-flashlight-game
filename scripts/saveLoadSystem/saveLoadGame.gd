@@ -47,6 +47,9 @@ func save_game(tree: SceneTree) -> void:
 		printerr("Failed to open save file for writing.")
 		return
 
+	printerr("Save", SceneManager.m_CurrentSceneAlias)
+	file.store_pascal_string(SceneManager.m_CurrentSceneAlias)
+
 	var save_nodes: Array[Variant] = tree.get_nodes_in_group(SAVE_GROUP_NAME)
 
 	for node in save_nodes:
@@ -72,7 +75,11 @@ func load_game(tree: SceneTree) -> void:
 
 	if file == null:
 		printerr("Failed to open save file for reading.")
-		return
+		return	
+	
+	var sceneAlias = file.get_pascal_string()
+	printerr("Load", sceneAlias)
+	SceneManager.SwitchScene(sceneAlias)
 
 	var save_nodes: Array[Variant] = tree.get_nodes_in_group(SAVE_GROUP_NAME)
 	var nodes_by_path: Dictionary = {}
