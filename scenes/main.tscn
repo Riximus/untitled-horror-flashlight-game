@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dlii65ro1qm6n"]
+[gd_scene load_steps=15 format=3 uid="uid://dlii65ro1qm6n"]
 
 [ext_resource type="Texture2D" uid="uid://bpiihio7er0e" path="res://assets/texture_07.png" id="1_xpvwb"]
 [ext_resource type="PackedScene" uid="uid://c16nt5tss8gca" path="res://scenes/player.tscn" id="2_km0o4"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://clah0r22x8egp" path="res://assets/lanten.blend" id="4_goew7"]
 [ext_resource type="PackedScene" uid="uid://o077r0ovsovi" path="res://assets/floroscant.blend" id="5_i6t26"]
 [ext_resource type="PackedScene" uid="uid://b8q1eaci04cii" path="res://assets/the_death_laser.blend" id="6_4l4id"]
+[ext_resource type="PackedScene" uid="uid://qj24ysq52j07" path="res://assets/windup.blend" id="7_qveha"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vvx3h"]
 albedo_texture = ExtResource("1_xpvwb")
@@ -86,3 +87,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.536507, 5.06207, -8.25653)
 
 [node name="the_death_laser" parent="." instance=ExtResource("6_4l4id")]
 transform = Transform3D(0.208152, -0.435571, -0.875757, -0.26135, 0.838045, -0.478933, 0.942533, 0.32857, 0.0606039, 1.10106, 2.43566, 6.52129)
+
+[node name="windup" parent="." instance=ExtResource("7_qveha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.433235, 0.422234, -2.35436)

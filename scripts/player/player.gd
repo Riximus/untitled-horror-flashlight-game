@@ -97,7 +97,7 @@ func _input(event: InputEvent) -> void:
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	if event.is_action_pressed("pickup") and item_manager.item_count < item_manager.slot_count:
+	if event.is_action_pressed("pickup") and item_manager.get_item_count() < item_manager.slot_count:
 		if item_raycast.is_colliding() and item_raycast.get_collider().is_in_group("Item"):
 			var new_item = item_raycast.get_collider()
 			new_item.freeze = true
