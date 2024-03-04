@@ -11,7 +11,6 @@ class_name Player
 @onready var pivot: TextureRect = $Head/Eyes/Camera3D/UIHolder/Pivot
 @onready var above_head_raycast: RayCast3D = $AboveHeadRayCast
 @onready var camera: Camera3D = $Head/Eyes/Camera3D
-@onready var pickup_pos: Node3D = $Head/Eyes/Camera3D/PickupPos
 # @onready var flashlight: SpotLight3D = $Hand/SpotLight3D
 @onready var animation_player: AnimationPlayer = $Head/Eyes/AnimationPlayer
 @onready var item_manager: ItemManager = $ItemManager
@@ -102,7 +101,7 @@ func _input(event: InputEvent) -> void:
 			var new_item = item_raycast.get_collider()
 			new_item.freeze = true
 			new_item.get_node("CollisionShape3D").disabled = true
-			new_item.reparent(pickup_pos)
+			new_item.reparent(item_manager.pickup_pos)
 			
 			item_manager.pickup_item(new_item)
 	if event.is_action_pressed("drop") and item_manager.cur_item:
@@ -144,10 +143,10 @@ func _physics_process(delta: float) -> void:
 			current_player_state = PLAYER_STATE.IDLE
 
 	if item_manager.cur_item:
-		item_manager.cur_item.global_position = lerp(item_manager.cur_item.global_position, 
-		pickup_pos.global_position, delta*lerp_speed)
+		item_manager.cur_item.position = lerp(item_manager.cur_item.position, 
+		item_manager.item_offset, delta*lerp_speed)
 		item_manager.cur_item.global_rotation = lerp(item_manager.cur_item.global_rotation, 
-		pickup_pos.global_rotation, delta*lerp_speed)
+		item_manager.pickup_pos.global_rotation, delta*lerp_speed)
 
 		# Handle head bobbing
 	if is_on_floor() and not current_player_state == PLAYER_STATE.IDLE and input_dir != Vector2.ZERO:

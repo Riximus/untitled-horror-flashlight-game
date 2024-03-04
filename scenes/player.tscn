@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://c16nt5tss8gca"]
+[gd_scene load_steps=14 format=3 uid="uid://c16nt5tss8gca"]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_5e2pe"]
 [ext_resource type="Script" path="res://scripts/player/hand.gd" id="2_p83w1"]
 [ext_resource type="Script" path="res://scripts/item/item_manager.gd" id="3_6v8x6"]
 [ext_resource type="PackedScene" uid="uid://dofh1sa1qkop2" path="res://assets/lightflash.blend" id="3_hfxgh"]
 [ext_resource type="Resource" uid="uid://bs4xxjcnln8cn" path="res://resources/flashlight.tres" id="4_m2xw2"]
+[ext_resource type="Resource" uid="uid://dgc7kpw3rk6xm" path="res://resources/note.tres" id="6_vchty"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_55fa2"]
 
@@ -187,6 +188,9 @@ offset_top = 531.0
 offset_right = 1087.0
 offset_bottom = 541.0
 
+[node name="NotePos" type="Node3D" parent="Head/Eyes/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.807773)
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Head/Eyes"]
 libraries = {
 "": SubResource("AnimationLibrary_jslnd")
@@ -218,4 +222,4 @@ target_position = Vector3(0, 2, 0)
 script = ExtResource("3_6v8x6")
 image_slots = [NodePath("../Head/Eyes/Camera3D/UIHolder/SlotImage1"), NodePath("../Head/Eyes/Camera3D/UIHolder/SlotImage2"), NodePath("../Head/Eyes/Camera3D/UIHolder/SlotImage3")]
 ui_slots = [NodePath("../Head/Eyes/Camera3D/UIHolder/Slot1"), NodePath("../Head/Eyes/Camera3D/UIHolder/Slot2"), NodePath("../Head/Eyes/Camera3D/UIHolder/Slot3")]
-item_resources = Array[Resource("res://scripts/item/item_resource.gd")]([ExtResource("4_m2xw2")])
+item_resources = Array[Resource("res://scripts/item/item_resource.gd")]([ExtResource("4_m2xw2"), ExtResource("6_vchty")])

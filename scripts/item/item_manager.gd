@@ -9,9 +9,12 @@ class_name ItemManager
 var cur_items: Array[Item] = [null, null, null]
 var cur_item_idx: int = 0
 var cur_item: Item = null
+var item_offset: Vector3 = Vector3.ZERO
 
 @onready var slot_count: int = ui_slots.size()
 @onready var pointer: ColorRect = $"../Head/Eyes/Camera3D/UIHolder/Pointer"
+@onready var note_pos: Node3D = $"../Head/Eyes/Camera3D/NotePos"
+@onready var pickup_pos: Node3D = $"../Head/Eyes/Camera3D/PickupPos"
 
 func get_item_count():
 	return cur_items.filter(func(itm): return itm != null).size()
@@ -31,6 +34,7 @@ func change_cur_item(new_item: Item):
 	if cur_item:
 		cur_item.visible = false
 	cur_item = new_item
+	item_offset = Vector3.ZERO
 	
 func pickup_item(item: Item):
 	change_cur_item(item)
@@ -69,4 +73,11 @@ func _ready():
 
 func _enter_tree():
 	item_resources[0].item_action = func():
-		$"../Head/Hand/lightflash/SpotLight3D".visible = not $"../Head/Hand/lightflash/SpotLight3D".visible
+		print("flash")
+	
+	item_resources[1].item_action = func():
+		cur_item.get_node("Label3D").visible = not cur_item.get_node("Label3D").visible
+		if item_offset == Vector3.ZERO:
+			item_offset = note_pos.position - pickup_pos.position
+		else:
+			item_offset = Vector3.ZERO
