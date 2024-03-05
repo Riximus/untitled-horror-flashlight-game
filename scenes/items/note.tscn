@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1nomdlwb8bpu"]
+
+[ext_resource type="PackedScene" uid="uid://bdxhgs0r6ynvi" path="res://scenes/item.tscn" id="1_2cj37"]
+[ext_resource type="Resource" uid="uid://dgc7kpw3rk6xm" path="res://resources/note.tres" id="2_7jxu6"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_aldw6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wv810"]
+size = Vector3(0.276367, 0.398499, 0.00390625)
+
+[node name="Item" instance=ExtResource("1_2cj37")]
+item_resource = ExtResource("2_7jxu6")
+
+[node name="MeshInstance3D" parent="." index="0"]
+transform = Transform3D(0.276694, 0, 0, 0, 0.404359, 0, 0, 0, 0.00240119, 0, 0, 0)
+mesh = SubResource("BoxMesh_aldw6")
+
+[node name="CollisionShape3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00393677, 0)
+shape = SubResource("BoxShape3D_wv810")
+
+[node name="Label3D" type="Label3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.139272, 0.00252315)
+visible = false
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "Pepperoni"
+font_size = 5
