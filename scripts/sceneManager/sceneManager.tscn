@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/sceneManager/sceneManager.gd" id="1_1pyfv"]
 
-[node name="SceneManager" type="Node"]
+[node name="SceneManager" type="Node" groups=["Persist"]]
 script = ExtResource("1_1pyfv")
 Scenes = {
 "Main": &"res://scenes/main.tscn",

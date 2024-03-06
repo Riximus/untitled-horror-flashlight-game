@@ -47,9 +47,6 @@ func save_game(tree: SceneTree) -> void:
 		printerr("Failed to open save file for writing.")
 		return
 
-	printerr("Save", SceneManager.m_CurrentSceneAlias)
-	file.store_pascal_string(SceneManager.m_CurrentSceneAlias)
-
 	var save_nodes: Array[Variant] = tree.get_nodes_in_group(SAVE_GROUP_NAME)
 
 	for node in save_nodes:
@@ -62,7 +59,7 @@ func save_game(tree: SceneTree) -> void:
 	print("------- Game saved successfully -------")
 
 # Loads the game state from a binary file.
-func load_game(tree: SceneTree) -> void:
+func load_game(tree: SceneTree, _file: FileAccess = null) -> void:
 	print("------- LOADING GAME -------")
 	if not ENABLED:
 		return
@@ -79,7 +76,7 @@ func load_game(tree: SceneTree) -> void:
 	
 	var sceneAlias = file.get_pascal_string()
 	printerr("Load", sceneAlias)
-	SceneManager.SwitchScene(sceneAlias)
+	call_deferred("SceneManager.SwitchScene(sceneAlias)")
 
 	var save_nodes: Array[Variant] = tree.get_nodes_in_group(SAVE_GROUP_NAME)
 	var nodes_by_path: Dictionary = {}
@@ -99,3 +96,21 @@ func load_game(tree: SceneTree) -> void:
 		if not nodes_by_path[path].is_inside_tree():
 			nodes_by_path[path].queue_free()
 
+func load_game_scene_in_file() -> String:
+	print("------- LOADING SCENE IN FILE -------")
+	if not ENABLED:
+		return ''
+
+	var file = null
+	if OS.is_debug_build():
+		file = FileAccess.open(SAVE_GAME_PATH, FileAccess.READ)
+	else:
+		file = FileAccess.open_encrypted_with_pass(SAVE_GAME_PATH, FileAccess.READ, ENCRYPTION_KEY)
+
+	if file == null:
+		printerr("Failed to open save file for reading.")
+		return ''
+		
+	var scene_alias = file.get_pascal_string()
+	file.close()
+	return scene_alias

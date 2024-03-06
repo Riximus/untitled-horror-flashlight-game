@@ -27,11 +27,18 @@ func RemoveScene(sceneAlias : String) -> void:
 	 
 # Description: Switch to the requested scene based on its alias
 # Parameter sceneAlias: The scene alias of the scene to switch to
-func SwitchScene(sceneAlias : String) -> void:
+func SwitchScene(sceneAlias : String, is_loading = false) -> void:
 	get_tree().change_scene_to_file(Scenes[sceneAlias])
+	if is_loading:
+		# Connect to a signal or directly call a method after the scene has changed
+		call_deferred("_trigger_load_game")
 	m_CurrentSceneAlias = sceneAlias
 	printerr("Switch Scene ", m_CurrentSceneAlias, sceneAlias)
- 
+
+func _trigger_load_game() -> void:
+	# This function would be responsible for initiating the loading process
+	SaveLoadGame.load_game(get_tree())
+
 # Description: Restart the current scene
 func RestartScene() -> void:
 	get_tree().reload_current_scene()
@@ -39,3 +46,9 @@ func RestartScene() -> void:
 # Description: Quit the game
 func QuitGame() -> void:
 	get_tree().quit()
+
+func serialize(file: FileAccess) -> void:
+	file.store_pascal_string(SceneManager.m_CurrentSceneAlias)
+
+func deserialize(file: FileAccess) -> void:
+	SceneManager.m_CurrentSceneAlias = file.get_pascal_string()
