@@ -197,7 +197,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 func _process(delta):
-	if item_raycast.is_colliding() and item_raycast.get_collider().is_in_group("Item"):
+	if item_raycast.is_colliding():
 		pivot.visible = true
+		
+		if Input.is_action_pressed("primary_action") and item_raycast.get_collider().is_in_group("Door"):
+			if item_raycast.get_collider().key == null or item_manager.cur_item == item_raycast.get_collider().key:
+				await item_raycast.get_collider().open(delta)
 	else:
 		pivot.visible = false

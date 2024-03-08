@@ -12,7 +12,7 @@ func _ready():
 	pass
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_motion := event as InputEventMouseMotion
 		mouse_movement_x = -mouse_motion.relative.x
 		
