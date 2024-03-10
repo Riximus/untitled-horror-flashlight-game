@@ -193,7 +193,7 @@ func _physics_process(delta: float) -> void:
 	last_velocity = velocity
 	move_and_slide()
 	
-func _process(delta):
+func _process(_delta):
 	if item_raycast.is_colliding() and item_raycast.get_collider().is_in_group("Item"):
 		pivot.visible = true
 	else:
